@@ -13,18 +13,18 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class TransferRequestDTO {
 
-    @Pattern(regexp="\\d{10}", message = "Conta origem deve ter 10 dígitos")
+    @Pattern(regexp="\\d{10}", message="Conta origem deve ter 10 dígitos")
     @NotBlank
     private String accountFrom;
 
-    @Pattern(regexp="\\d{10}", message = "Conta destino deve ter 10 dígitos")
+    @Pattern(regexp="\\d{10}", message="Conta destino deve ter 10 dígitos")
     @NotBlank
     private String accountTo;
 
     @NotNull
-    @DecimalMin(value = "0.01", message = "Valor deve ser maior que 0")
+    @DecimalMin(value="0.01", message="Valor deve ser maior que 0")
     private BigDecimal amount;
 
-    @NotNull(message = "Data de transferência é obrigatória")
+    @NotNull(message="Data de transferência é obrigatória")
     private LocalDate transferDate;
 }

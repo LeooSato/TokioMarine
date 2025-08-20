@@ -8,7 +8,8 @@ import java.time.Instant;
 @Table(name = "users",
         uniqueConstraints = {
                 @UniqueConstraint(name = "uk_users_username", columnNames = "username"),
-                @UniqueConstraint(name = "uk_users_email", columnNames = "email")
+                @UniqueConstraint(name = "uk_users_email", columnNames = "email"),
+                @UniqueConstraint(name = "uk_users_account_number", columnNames = "account_number")
         })
 @Data
 @NoArgsConstructor
@@ -26,13 +27,16 @@ public class UserModel {
     private String email;
 
     @Column(nullable = false, length = 100)
-    private String passwordHash;   // senha criptografada
+    private String passwordHash;
 
     @Column(nullable = false, length = 30)
     @Builder.Default
-    private String role = "USER";  // simples por enquanto
+    private String role = "USER";
 
     @Column(nullable = false)
     @Builder.Default
     private Instant createdAt = Instant.now();
+
+    @Column(name = "account_number", nullable = false, length = 10)
+    private String accountNumber; //
 }

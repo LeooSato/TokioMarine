@@ -10,27 +10,26 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final SecureRandom random = new SecureRandom();
 
     public UserResponseDTO register(SignupRequestDTO dto) {
-        boolean userTaken  = userRepository.existsByUsername(dto.getUsername());
-        boolean emailTaken = userRepository.existsByEmail(dto.getEmail());
+        if (userRepository.existsByUsername(dto.getUsername())) throw new BusinessException("Username já em uso.");
+        if (userRepository.existsByEmail(dto.getEmail())) throw new BusinessException("Email já em uso.");
 
-        BusinessException ex =
-                userTaken  ? new BusinessException("Username já em uso.") :
-                        emailTaken ? new BusinessException("Email já em uso.") :
-                                null;
-
-        if (ex != null) throw ex;
+        String accountNumber = generateUniqueAccountNumber();
 
         UserModel user = UserModel.builder()
                 .username(dto.getUsername())
                 .email(dto.getEmail())
                 .passwordHash(passwordEncoder.encode(dto.getPassword()))
+                .accountNumber(accountNumber)
                 .role("USER")
                 .build();
 
@@ -44,5 +43,14 @@ public class UserService {
                 .createdAt(user.getCreatedAt())
                 .build();
     }
+
+    private String generateUniqueAccountNumber() {
+        String num;
+        do {
+            num = String.format("%010d", random.nextInt(1_000_000_000));
+        } while (userRepository.existsByAccountNumber(num));
+        return num;
+    }
+
 
 }
