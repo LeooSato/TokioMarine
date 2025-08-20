@@ -12,7 +12,7 @@ Cada usuário recebe um **accountNumber** (10 dígitos). Só é possível transf
 ## ⚙️ Requisitos
 - **Java 11**
 - **Maven 3.8+**
-- (Opcional) `curl` e `jq` para testes via terminal
+- (Opcional) `curl` e `postman` para testes diretos na API
 
 ---
 
