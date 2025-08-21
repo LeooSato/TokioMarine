@@ -17,11 +17,21 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
+import static java.math.BigDecimal.ZERO;
+
 @Service
 @RequiredArgsConstructor
 public class TransferService {
     private final TransferRepository repo;
     private final UserRepository userRepo;
+
+    private static final BigDecimal FIXED_D0     = new BigDecimal("3.00");
+    private static final BigDecimal RATE_D0      = new BigDecimal("0.025");
+    private static final BigDecimal FIXED_D1_10  = new BigDecimal("12.00");
+    private static final BigDecimal RATE_D11_20  = new BigDecimal("0.082");
+    private static final BigDecimal RATE_D21_30  = new BigDecimal("0.069");
+    private static final BigDecimal RATE_D31_40  = new BigDecimal("0.047");
+    private static final BigDecimal RATE_D41_50  = new BigDecimal("0.017");
 
     public TransferResponseDTO schedule(TransferRequestDTO dto) {
         LocalDate today = LocalDate.now();
@@ -82,22 +92,34 @@ public class TransferService {
                 .build();
     }
 
-    private BigDecimal calcFee(java.math.BigDecimal amount, int days) {
-        if (days < 0) throw new BusinessException("Dias inválidos.");
+    private BigDecimal calcFee(BigDecimal amount, int days) {
+        if (amount == null || amount.signum() <= 0) {
+            throw new BusinessException("Valor inválido.");
+        }
+        if (days < 0) {
+            throw new BusinessException("Dias inválidos.");
+        }
 
-        java.math.BigDecimal fixed = java.math.BigDecimal.ZERO;
-        java.math.BigDecimal perc  = java.math.BigDecimal.ZERO;
+        BigDecimal fixed = ZERO;
+        BigDecimal rate  = ZERO;
 
-        if (days == 0) { fixed = new java.math.BigDecimal("3.00");  perc = new java.math.BigDecimal("0.025"); }
-        else if (days <= 10) { fixed = new java.math.BigDecimal("12.00"); }
-        else if (days <= 20) { perc  = new java.math.BigDecimal("0.082"); }
-        else if (days <= 30) { perc  = new java.math.BigDecimal("0.069"); }
-        else if (days <= 40) { perc  = new java.math.BigDecimal("0.047"); }
-        else if (days <= 50) { perc  = new java.math.BigDecimal("0.017"); }
-        else { throw new BusinessException("Não há taxa aplicável para mais de 50 dias."); }
+        if (days == 0) {
+            fixed = FIXED_D0;    rate = RATE_D0;
+        } else if (days <= 10) {
+            fixed = FIXED_D1_10;
+        } else if (days <= 20) {
+            rate = RATE_D11_20;
+        } else if (days <= 30) {
+            rate = RATE_D21_30;
+        } else if (days <= 40) {
+            rate = RATE_D31_40;
+        } else if (days <= 50) {
+            rate = RATE_D41_50;
+        } else {
+            throw new BusinessException("Não há taxa aplicável para mais de 50 dias.");
+        }
 
-        return fixed.add(amount.multiply(perc)); // arredondamento é feito na schedule()
+        return fixed.add(amount.multiply(rate));
     }
-
 }
 
