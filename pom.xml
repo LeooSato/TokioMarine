@@ -97,6 +97,18 @@
             <version>0.11.5</version>
             <scope>runtime</scope>
         </dependency>
+        <!-- OpenAPI/Swagger para Spring Boot 2.x -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>1.7.0</version>
+        </dependency>
+        <!-- opcional, mas útil para anotações de segurança -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-security</artifactId>
+            <version>1.7.0</version>
+        </dependency>
 
     </dependencies>
 
