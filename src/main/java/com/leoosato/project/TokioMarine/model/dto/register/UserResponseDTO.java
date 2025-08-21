@@ -8,6 +8,7 @@ import java.time.Instant;
 @AllArgsConstructor
 @Builder
 public class UserResponseDTO {
+    private String fullName;
     private Long id;
     private String username;
     private String email;

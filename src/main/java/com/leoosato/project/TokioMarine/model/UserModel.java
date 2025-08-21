@@ -39,4 +39,7 @@ public class UserModel {
 
     @Column(name = "account_number", nullable = false, length = 10)
     private String accountNumber; //
+
+    @Column(nullable = false, length = 120)
+    private String fullName;
 }

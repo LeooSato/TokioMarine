@@ -6,6 +6,7 @@ import com.leoosato.project.TokioMarine.model.dto.login.AuthResponseDTO;
 import com.leoosato.project.TokioMarine.model.dto.login.LoginRequestDTO;
 import com.leoosato.project.TokioMarine.model.dto.register.SignupRequestDTO;
 import com.leoosato.project.TokioMarine.model.dto.register.UserResponseDTO;
+import com.leoosato.project.TokioMarine.model.dto.transfer.UserContactDTO;
 import com.leoosato.project.TokioMarine.repository.UserRepository;
 import com.leoosato.project.TokioMarine.security.JwtUtil;
 import com.leoosato.project.TokioMarine.service.UserService;
@@ -20,6 +21,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/auth")
@@ -63,5 +65,10 @@ public class AuthController {
                 .role(u.getRole())
                 .createdAt(u.getCreatedAt())
                 .build();
+    }
+
+    @GetMapping("/contacts")
+    public List<UserContactDTO> all() {
+        return userService.listContacts();
     }
 }

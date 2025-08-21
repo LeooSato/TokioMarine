@@ -8,6 +8,9 @@ import javax.validation.constraints.*;
 @AllArgsConstructor
 public class SignupRequestDTO {
 
+    @NotBlank @Size(min=3, max=120)
+    private String fullName;
+
     @NotBlank
     @Pattern(regexp="^[a-zA-Z0-9_\\.\\-]{3,40}$", message = "Username inválido")
     private String username;
